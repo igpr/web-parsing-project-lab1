@@ -1,0 +1,105 @@
+﻿{% extends "base.html" %}
+
+{% block title %}О проекте - Каталог смартфонов{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title mb-4">О проекте</h1>
+
+                <h3>Курсовой проект</h3>
+                <p class="lead">
+                    «Разработка интеграционной базы данных на основе парсинга веб-ресурсов»
+                </p>
+
+                <hr>
+
+                <h4>Цель проекта</h4>
+                <p>
+                    Целью проекта является приобретение практических навыков по сбору,
+                    обработке и интеграции разнородных данных из публичных веб-источников,
+                    проектированию реляционной базы данных и созданию простого
+                    веб-приложения для работы с этой базой.
+                </p>
+
+                <h4>Технологии</h4>
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <ul>
+                            <li><strong>Backend:</strong> Python, Flask</li>
+                            <li><strong>База данных:</strong> SQLite</li>
+                            <li><strong>Парсинг:</strong> Requests, BeautifulSoup</li>
+                            <li><strong>Frontend:</strong> HTML, CSS, JavaScript, Bootstrap 5</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul>
+                            <li><strong>API:</strong> RESTful API для доступа к данным</li>
+                            <li><strong>Визуализация:</strong> Chart.js для графиков</li>
+                            <li><strong>Дедупликация:</strong> Алгоритмы объединения дубликатов</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h4>Функциональность</h4>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h1 class="display-6 text-primary"><i class="bi bi-search"></i></h1>
+                                <h5>Поиск товаров</h5>
+                                <p class="small">По названию, бренду, цене</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h1 class="display-6 text-success"><i class="bi bi-bar-chart"></i></h1>
+                                <h5>Сравнение цен</h5>
+                                <p class="small">Из разных магазинов</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h1 class="display-6 text-info"><i class="bi bi-database"></i></h1>
+                                <h5>Статистика</h5>
+                                <p class="small">Анализ данных в реальном времени</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <h4>Структура базы данных</h4>
+                <p>Проект использует 4 основные таблицы:</p>
+                <ol>
+                    <li><strong>products</strong> - уникальные товары после дедупликации</li>
+                    <li><strong>offers</strong> - предложения с конкретных сайтов</li>
+                    <li><strong>attributes</strong> - характеристики товаров</li>
+                    <li><strong>parse_logs</strong> - логи парсинга данных</li>
+                </ol>
+
+                <div class="alert alert-info">
+                    <h5><i class="bi bi-info-circle"></i> Примечание</h5>
+                    <p>
+                        В данном проекте используются тестовые данные, сгенерированные автоматически.
+                        В реальной реализации данные парсятся с сайтов-источников.
+                    </p>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="/" class="btn btn-primary btn-lg">
+                        <i class="bi bi-house-door"></i> Вернуться на главную
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

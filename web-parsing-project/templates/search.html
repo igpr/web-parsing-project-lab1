@@ -1,0 +1,127 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Поиск - Каталог смартфонов{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Фильтры -->
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Фильтры</h5>
+            </div>
+            <div class="card-body">
+                <form method="get" action="/search">
+                    <!-- Поисковый запрос -->
+                    <div class="mb-3">
+                        <label for="searchQuery" class="form-label">Название</label>
+                        <input type="text" class="form-control" id="searchQuery" name="q" value="{{ query }}" placeholder="Модель или бренд...">
+                    </div>
+
+                    <!-- Бренд -->
+                    <div class="mb-3">
+                        <label class="form-label">Бренд</label>
+                        <select class="form-select" name="brand">
+                            <option value="">Все бренды</option>
+                            {% for brand in brands %}
+                            <option value="{{ brand }}" {% if brand == selected_brand %}selected{% endif %}>
+                                {{ brand }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Цена -->
+                    <div class="mb-3">
+                        <label class="form-label">Цена, руб.</label>
+                        <div class="row g-2">
+                            <div class="col">
+                                <input type="number" class="form-control" name="min_price" placeholder="От" value="{{ min_price }}">
+                            </div>
+                            <div class="col">
+                                <input type="number" class="form-control" name="max_price" placeholder="До" value="{{ max_price }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-funnel"></i> Применить фильтры
+                    </button>
+                    <a href="/search" class="btn btn-outline-secondary w-100 mt-2">
+                        <i class="bi bi-x-circle"></i> Сбросить
+                    </a>
+                </form>
+            </div>
+        </div>
+
+        <!-- Статистика поиска -->
+        <div class="card">
+            <div class="card-body">
+                <h6>Результаты поиска:</h6>
+                <p class="mb-1">Найдено: <strong>{{ search_results|length }}</strong> товаров</p>
+                {% if query %}
+                <p class="mb-0">Запрос: <code>{{ query }}</code></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Результаты поиска -->
+    <div class="col-md-9">
+        <h2 class="mb-4">
+            {% if query %}
+            Результаты поиска: "{{ query }}"
+            {% else %}
+            Все смартфоны
+            {% endif %}
+        </h2>
+
+        {% if search_results %}
+        <div class="row">
+            {% for product in search_results %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 product-card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product['canonical_name'] }}</h5>
+                        <div class="mb-3">
+                            <span class="badge bg-primary">{{ product['brand'] }}</span>
+                            <span class="badge bg-secondary">{{ product['model'] }}</span>
+                            <span class="badge bg-info">{{ product['offers_count'] }} предложений</span>
+                        </div>
+
+                        <div class="price-info mb-3">
+                            <div class="row">
+                                <div class="col">
+                                    <small class="text-muted">Минимальная</small>
+                                    <h4 class="text-success price">{{ product['min_price'] }}</h4>
+                                </div>
+                                <div class="col">
+                                    <small class="text-muted">Средняя</small>
+                                    <h5 class="text-primary">{{ "%.0f"|format(product['avg_price']) }} ₽</h5>
+                                </div>
+                                <div class="col">
+                                    <small class="text-muted">Максимальная</small>
+                                    <h5 class="text-danger">{{ "%.0f"|format(product['max_price']) }} ₽</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="/product/{{ product['id'] }}" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-arrow-right-circle"></i> Сравнить цены
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <h4><i class="bi bi-info-circle"></i> Ничего не найдено</h4>
+            <p>Попробуйте изменить параметры поиска или выбрать другой бренд.</p>
+            <a href="/search" class="btn btn-primary">Показать все товары</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,142 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Статистика - Каталог смартфонов{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="bi bi-graph-up"></i> Статистика базы данных</h1>
+
+<!-- Общая статистика -->
+<div class="row mb-5">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body text-center">
+                <h1 class="display-4">{{ products_count }}</h1>
+                <p class="card-text">уникальных товаров</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body text-center">
+                <h1 class="display-4">{{ offers_count }}</h1>
+                <p class="card-text">предложений от магазинов</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-body text-center">
+                <h1 class="display-4">{{ website_stats|length }}</h1>
+                <p class="card-text">источников данных</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Статистика по брендам -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="bi bi-tags"></i> Статистика по брендам</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Бренд</th>
+                                <th>Товары</th>
+                                <th>Предложения</th>
+                                <th>Средняя цена</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stat in brand_stats %}
+                            <tr>
+                                <td><strong>{{ stat['brand'] }}</strong></td>
+                                <td>{{ stat['products_count'] }}</td>
+                                <td>{{ stat['offers_count'] }}</td>
+                                <td class="text-primary">{{ "%.0f"|format(stat['avg_price']) }} ₽</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Статистика по сайтам -->
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="bi bi-shop"></i> Статистика по магазинам</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Магазин</th>
+                                <th>Предложения</th>
+                                <th>Средняя цена</th>
+                                <th>Разброс цен</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stat in website_stats %}
+                            <tr>
+                                <td><strong>{{ stat['website_name'] }}</strong></td>
+                                <td>{{ stat['offers_count'] }}</td>
+                                <td class="text-primary">{{ "%.0f"|format(stat['avg_price']) }} ₽</td>
+                                <td>
+                                    <small class="text-muted">
+                                        {{ "%.0f"|format(stat['min_price']) }} - {{ "%.0f"|format(stat['max_price']) }} ₽
+                                    </small>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Последние обновления -->
+<div class="card">
+    <div class="card-header bg-light">
+        <h5 class="mb-0"><i class="bi bi-clock-history"></i> Последние обновления</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Источник</th>
+                        <th>Количество товаров</th>
+                        <th>Последнее обновление</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for update in last_updates %}
+                    <tr>
+                        <td>{{ update['website_name'] }}</td>
+                        <td>{{ update['count'] }}</td>
+                        <td>
+                            {% if update['last_parsed'] %}
+                            {{ update['last_parsed'][:10] }} в {{ update['last_parsed'][11:16] }}
+                            {% else %}
+                            Нет данных
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

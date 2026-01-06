@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Ноутбук Lenovo IdeaPad 3",
+    "price": 42990.0,
+    "url": "https://www.dns-shop.ru/product/laptop-lenovo-ideapad-3",
+    "description": "Ноутбук с экраном 15.6 дюймов",
+    "brand": "Lenovo",
+    "model": "IdeaPad 3 15ALC6",
+    "website": "DNS",
+    "specs": {
+      "ram": "8GB",
+      "storage": "512GB SSD",
+      "processor": "AMD Ryzen 5"
+    }
+  },
+  {
+    "name": "Смартфон Xiaomi Redmi Note 12",
+    "price": 19990.0,
+    "url": "https://www.mvideo.ru/xiaomi-redmi-note-12",
+    "description": "Смартфон с AMOLED дисплеем",
+    "brand": "Xiaomi",
+    "model": "Redmi Note 12",
+    "website": "MVideo",
+    "specs": {
+      "screen": "6.67 дюйма",
+      "camera": "48 МП",
+      "battery": "5000 mAh"
+    }
+  },
+  {
+    "name": "Наушники Sony WH-CH720N",
+    "price": 12990.0,
+    "url": "https://www.citilink.ru/sony-wh-ch720n",
+    "description": "Беспроводные наушники с шумоподавлением",
+    "brand": "Sony",
+    "model": "WH-CH720N",
+    "website": "Citilink",
+    "specs": {
+      "type": "Накладные",
+      "wireless": "Bluetooth 5.2",
+      "noise_cancel": "Да"
+    }
+  }
+]

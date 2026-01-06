@@ -1,0 +1,47 @@
+[
+  {
+    "id": "ozon_0",
+    "name": "Смартфон Apple iPhone 15 Pro 128GB",
+    "price": "104 999 руб.",
+    "website": "OZON",
+    "brand": "Apple",
+    "parsed_at": "2026-01-05T16:47:19.980717",
+    "note": "тестовые данные (сайт недоступен)"
+  },
+  {
+    "id": "ozon_1",
+    "name": "Смартфон Samsung Galaxy S24 Ultra 12/256GB",
+    "price": "129 999 руб.",
+    "website": "OZON",
+    "brand": "Samsung",
+    "parsed_at": "2026-01-05T16:47:19.980717",
+    "note": "тестовые данные (сайт недоступен)"
+  },
+  {
+    "id": "ozon_2",
+    "name": "Смартфон Xiaomi Redmi Note 13 Pro 8/256GB",
+    "price": "32 999 руб.",
+    "website": "OZON",
+    "brand": "Xiaomi",
+    "parsed_at": "2026-01-05T16:47:19.980717",
+    "note": "тестовые данные (сайт недоступен)"
+  },
+  {
+    "id": "ozon_3",
+    "name": "Смартфон Google Pixel 8 Pro 12/128GB",
+    "price": "89 999 руб.",
+    "website": "OZON",
+    "brand": "Google",
+    "parsed_at": "2026-01-05T16:47:19.980717",
+    "note": "тестовые данные (сайт недоступен)"
+  },
+  {
+    "id": "ozon_4",
+    "name": "Смартфон Realme GT 5 16/512GB",
+    "price": "49 999 руб.",
+    "website": "OZON",
+    "brand": "Realme",
+    "parsed_at": "2026-01-05T16:47:19.980717",
+    "note": "тестовые данные (сайт недоступен)"
+  }
+]

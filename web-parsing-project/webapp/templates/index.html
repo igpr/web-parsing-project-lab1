@@ -1,0 +1,771 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поиск товаров - Электроника</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+            .card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+            }
+
+        .product-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+            background: linear-gradient(45deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 15px;
+        }
+
+        .product-img-placeholder {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(45deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .price {
+            color: #28a745;
+            font-weight: bold;
+            font-size: 1.3em;
+            margin: 10px 0;
+        }
+
+        .out-of-stock {
+            opacity: 0.7;
+            position: relative;
+        }
+
+            .out-of-stock::after {
+                content: "Нет в наличии";
+                position: absolute;
+                top: 10px;
+                right: -5px;
+                background: #dc3545;
+                color: white;
+                padding: 3px 10px;
+                border-radius: 4px;
+                font-size: 12px;
+                transform: rotate(15deg);
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            }
+
+        .badge-category {
+            background: linear-gradient(45deg, #6c757d, #495057);
+            color: white;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+
+        .filter-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: all 0.3s;
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            }
+
+        .pagination .page-link {
+            border-radius: 8px;
+            margin: 0 5px;
+            border: none;
+            color: #667eea;
+        }
+
+        .pagination .active .page-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+        }
+
+        .search-highlight {
+            background-color: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+        }
+
+            .loader:after {
+                content: " ";
+                display: block;
+                width: 64px;
+                height: 64px;
+                margin: 8px;
+                border-radius: 50%;
+                border: 6px solid #667eea;
+                border-color: #667eea transparent #667eea transparent;
+                animation: loader 1.2s linear infinite;
+            }
+
+        @keyframes loader {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .modal-content {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(102, 126, 234, 0.1);
+        }
+
+        footer {
+            margin-top: 50px;
+            border-top: 1px solid #e9ecef;
+            padding: 30px 0;
+            background: #343a40;
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-search-heart"></i> <strong>Поиск товаров</strong>
+            </a>
+            <div class="navbar-text">
+                <small>Курсовой проект: База данных электроники</small>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Статистика -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="stats-card">
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-3">
+                            <h2><i class="bi bi-box-seam"></i></h2>
+                            <h3 id="totalProducts">0</h3>
+                            <p>Товаров в базе</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <h2><i class="bi bi-shop-window"></i></h2>
+                            <h3 id="totalOffers">0</h3>
+                            <p>Предложений</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <h2><i class="bi bi-building"></i></h2>
+                            <h3 id="totalWebsites">0</h3>
+                            <p>Магазинов</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <h2><i class="bi bi-database"></i></h2>
+                            <p class="mb-1" id="dbType">SQLite</p>
+                            <p class="small">База данных</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Фильтры и поиск -->
+        <div class="filter-card">
+            <h4 class="mb-4"><i class="bi bi-funnel"></i> Поиск и фильтрация</h4>
+
+            <div class="row mb-3">
+                <div class="col-md-8">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" id="searchInput" class="form-control"
+                               placeholder="Введите название товара, бренд или описание...">
+                        <button class="btn btn-primary" onclick="searchProducts()">
+                            Найти
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex gap-2">
+                        <select id="categoryFilter" class="form-select" onchange="searchProducts()">
+                            <option value="">Все категории</option>
+                            <option value="Ноутбуки">Ноутбуки</option>
+                            <option value="Смартфоны">Смартфоны</option>
+                            <option value="Наушники">Наушники</option>
+                            <option value="Планшеты">Планшеты</option>
+                            <option value="Мониторы">Мониторы</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label">Цена от:</label>
+                    <div class="input-group">
+                        <input type="number" id="priceMin" class="form-control" placeholder="0">
+                        <span class="input-group-text">до</span>
+                        <input type="number" id="priceMax" class="form-control" placeholder="500000">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Бренд:</label>
+                    <select id="brandFilter" class="form-select" onchange="searchProducts()">
+                        <option value="">Все бренды</option>
+                        <!-- Бренды загрузятся динамически -->
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Магазин:</label>
+                    <select id="websiteFilter" class="form-select" onchange="searchProducts()">
+                        <option value="">Все магазины</option>
+                        <!-- Магазины загрузятся динамически -->
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Сортировка:</label>
+                    <select id="sortBy" class="form-select" onchange="searchProducts()">
+                        <option value="new">Сначала новые</option>
+                        <option value="price_asc">Цена по возрастанию</option>
+                        <option value="price_desc">Цена по убыванию</option>
+                        <option value="name">По названию (А-Я)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="d-flex gap-2 justify-content-end">
+                        <button class="btn btn-outline-primary" onclick="applyFilters()">
+                            <i class="bi bi-filter"></i> Применить фильтры
+                        </button>
+                        <button class="btn btn-outline-secondary" onclick="clearFilters()">
+                            <i class="bi bi-arrow-clockwise"></i> Сбросить всё
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Результаты -->
+        <div id="loader" class="text-center py-5" style="display: none;">
+            <div class="loader"></div>
+            <p class="mt-3">Загружаем товары...</p>
+        </div>
+
+        <div id="results" class="row">
+            <!-- Товары будут здесь -->
+        </div>
+
+        <!-- Пагинация -->
+        <nav id="pagination" class="mt-4 d-flex justify-content-center">
+            <!-- Пагинация будет здесь -->
+        </nav>
+
+        <!-- Сообщение если нет товаров -->
+        <div id="noResults" class="text-center py-5" style="display: none;">
+            <div class="alert alert-light border">
+                <i class="bi bi-emoji-frown display-4 text-muted"></i>
+                <h4 class="mt-3">Товары не найдены</h4>
+                <p class="text-muted">Попробуйте изменить параметры поиска или сбросить фильтры</p>
+                <button class="btn btn-primary mt-2" onclick="clearFilters()">
+                    <i class="bi bi-arrow-clockwise"></i> Показать все товары
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно товара -->
+    <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Детальная информация о товаре</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="productModalBody">
+                    <!-- Контент загрузится динамически -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Футер -->
+    <footer class="bg-dark text-white mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Курсовой проект</h5>
+                    <p>«Разработка интеграционной базы данных на основе парсинга веб-ресурсов»</p>
+                    <p class="text-muted">Тема: Электроника и гаджеты</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h5>Технологии</h5>
+                    <p>Python • Flask • SQLite • Bootstrap • HTML/CSS/JS</p>
+                    <p class="text-muted">© 2024 База данных электроники</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentPage = 1;
+        let totalPages = 1;
+        let totalProducts = 0;
+
+        // Загрузка при старте
+        window.onload = function () {
+            loadStats();
+            loadFilters();
+            searchProducts();
+        };
+
+        // Загрузка статистики
+        function loadStats() {
+            fetch('/api/stats')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('totalProducts').textContent = data.stats.total_products;
+                        document.getElementById('totalOffers').textContent = data.stats.total_offers;
+                        document.getElementById('totalWebsites').textContent = data.stats.websites.length;
+                        document.getElementById('dbType').textContent = data.stats.database;
+                    }
+                });
+        }
+
+        // Загрузка фильтров
+        function loadFilters() {
+            // Загрузка брендов
+            fetch('/api/brands')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        const select = document.getElementById('brandFilter');
+                        data.brands.forEach(brand => {
+                            const option = document.createElement('option');
+                            option.value = brand;
+                            option.textContent = brand;
+                            select.appendChild(option);
+                        });
+                    }
+                });
+
+            // Загрузка магазинов
+            fetch('/api/websites')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        const select = document.getElementById('websiteFilter');
+                        data.websites.forEach(website => {
+                            const option = document.createElement('option');
+                            option.value = website;
+                            option.textContent = website;
+                            select.appendChild(option);
+                        });
+                    }
+                });
+        }
+
+        // Поиск товаров
+        function searchProducts(page = 1) {
+            currentPage = page;
+
+            const query = document.getElementById('searchInput').value;
+            const category = document.getElementById('categoryFilter').value;
+            const brand = document.getElementById('brandFilter').value;
+            const website = document.getElementById('websiteFilter').value;
+            const sortBy = document.getElementById('sortBy').value;
+            const priceMin = document.getElementById('priceMin').value;
+            const priceMax = document.getElementById('priceMax').value;
+
+            // Показываем загрузчик
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('pagination').innerHTML = '';
+            document.getElementById('noResults').style.display = 'none';
+
+            // Формируем URL
+            let url = `/api/search?page=${page}`;
+            if (query) url += `&q=${encodeURIComponent(query)}`;
+            if (category) url += `&category=${encodeURIComponent(category)}`;
+            if (brand) url += `&brand=${encodeURIComponent(brand)}`;
+            if (website) url += `&website=${encodeURIComponent(website)}`;
+            if (sortBy) url += `&sort=${encodeURIComponent(sortBy)}`;
+            if (priceMin) url += `&price_min=${priceMin}`;
+            if (priceMax) url += `&price_max=${priceMax}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        totalProducts = data.total;
+                        displayProducts(data.products);
+                        displayPagination(data);
+
+                        if (data.products.length === 0) {
+                            document.getElementById('noResults').style.display = 'block';
+                        }
+                    } else {
+                        showError('Ошибка при загрузке данных: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                    showError('Ошибка соединения с сервером');
+                })
+                .finally(() => {
+                    document.getElementById('loader').style.display = 'none';
+                });
+        }
+
+        // Отображение товаров
+        function displayProducts(products) {
+            const container = document.getElementById('results');
+
+            if (products.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            products.forEach(product => {
+                const hasStock = product.in_stock !== false;
+                const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+                let highlightedName = product.name;
+
+                // Подсветка поискового запроса в названии
+                if (searchQuery) {
+                    const regex = new RegExp(`(${searchQuery})`, 'gi');
+                    highlightedName = product.name.replace(regex, '<span class="search-highlight">$1</span>');
+                }
+
+                html += `
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                            <div class="card h-100 ${!hasStock ? 'out-of-stock' : ''}">
+                                <div class="position-relative">
+                                    ${product.image_url ?
+                        `<img src="${product.image_url}"
+                                              class="card-img-top product-img"
+                                              alt="${product.name}"
+                                              loading="lazy"
+                                              onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=300&h=200&fit=crop'; this.alt='Изображение товара'">` :
+                        `<div class="product-img-placeholder">
+                                            <i class="bi bi-image display-4 text-muted"></i>
+                                        </div>`
+                    }
+                                    <span class="badge-category position-absolute top-0 start-0 m-3">
+                                        ${product.category || 'Электроника'}
+                                    </span>
+                                </div>
+
+                                <div class="card-body d-flex flex-column">
+                                    <h6 class="card-title" style="height: 60px; overflow: hidden;">
+                                        ${highlightedName}
+                                    </h6>
+                                    <p class="card-text">
+                                        <i class="bi bi-tag"></i> <strong>${product.brand || 'Бренд не указан'}</strong>
+                                    </p>
+
+                                    <div class="mt-auto">
+                                        ${product.min_price ? `
+                                            <div class="price">${product.min_price.toLocaleString('ru-RU')} ₽</div>
+                                            <p class="small text-muted">
+                                                <i class="bi bi-shop"></i> ${product.offers_count || 0} предложений
+                                            </p>
+                                        ` : '<p class="text-muted">Цена не указана</p>'}
+
+                                        <div class="d-grid gap-2 mt-3">
+                                            <button class="btn btn-outline-primary btn-sm" onclick="viewProduct(${product.id})">
+                                                <i class="bi bi-info-circle"></i> Подробнее
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Пагинация
+        function displayPagination(data) {
+            totalPages = data.pages;
+
+            if (totalPages <= 1) {
+                return;
+            }
+
+            const pagination = document.getElementById('pagination');
+
+            let pagesHtml = `
+                    <ul class="pagination">
+                        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                            <a class="page-link" href="#" onclick="searchProducts(${currentPage - 1})">
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </li>
+                `;
+
+            // Показываем до 5 страниц
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                pagesHtml += `
+                        <li class="page-item ${i === currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#" onclick="searchProducts(${i})">${i}</a>
+                        </li>
+                    `;
+            }
+
+            pagesHtml += `
+                    <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                        <a class="page-link" href="#" onclick="searchProducts(${currentPage + 1})">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                `;
+
+            pagination.innerHTML = pagesHtml;
+        }
+
+        // Просмотр товара
+        function viewProduct(productId) {
+            fetch(`/api/product/${productId}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        const product = data.product;
+
+                        let offersHtml = '';
+                        if (data.offers && data.offers.length > 0) {
+                            data.offers.forEach(offer => {
+                                offersHtml += `
+                                        <tr>
+                                            <td><i class="bi bi-shop"></i> ${offer.website}</td>
+                                            <td class="${offer.price ? 'fw-bold' : 'text-muted'}">
+                                                ${offer.price ? offer.price.toLocaleString('ru-RU') + ' ₽' : '—'}
+                                            </td>
+                                            <td>
+                                                <span class="badge ${offer.in_stock ? 'bg-success' : 'bg-danger'}">
+                                                    ${offer.in_stock ? 'В наличии' : 'Нет в наличии'}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="${offer.url}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-box-arrow-up-right"></i> Перейти
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    `;
+                            });
+                        } else {
+                            offersHtml = '<tr><td colspan="4" class="text-center text-muted">Нет предложений</td></tr>';
+                        }
+
+                        let attributesHtml = '';
+                        if (data.attributes && data.attributes.length > 0) {
+                            data.attributes.forEach(attr => {
+                                attributesHtml += `
+                                        <div class="col-md-6 mb-3">
+                                            <div class="border rounded p-3 h-100">
+                                                <strong class="d-block text-muted small">${attr.name}</strong>
+                                                <span class="d-block mt-1">${attr.value}</span>
+                                            </div>
+                                        </div>
+                                    `;
+                            });
+                        } else {
+                            attributesHtml = `
+                                    <div class="col-12">
+                                        <div class="alert alert-light text-center">
+                                            <i class="bi bi-info-circle"></i> Характеристики не указаны
+                                        </div>
+                                    </div>
+                                `;
+                        }
+
+                        document.getElementById('productModalBody').innerHTML = `
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="border rounded p-3 text-center bg-light">
+                                            ${product.image_url ?
+                                `<img src="${product.image_url}"
+                                                      class="img-fluid rounded"
+                                                      style="max-height: 300px;"
+                                                      onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=400&fit=crop';"
+                                                      alt="${product.name}">` :
+                                `<div class="d-flex align-items-center justify-content-center" style="height: 300px;">
+                                                    <i class="bi bi-image display-1 text-muted"></i>
+                                                </div>`
+                            }
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <h3 class="mb-3">${product.name}</h3>
+                                        <div class="mb-4">
+                                            <span class="badge bg-primary me-2"><i class="bi bi-tag"></i> ${product.brand || 'Не указан'}</span>
+                                            ${product.model ? `<span class="badge bg-secondary">Модель: ${product.model}</span>` : ''}
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <h5><i class="bi bi-card-text"></i> Описание</h5>
+                                            <p class="text-muted">${product.description || 'Описание отсутствует'}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <h5><i class="bi bi-list-check"></i> Характеристики</h5>
+                                        <div class="row mt-3">
+                                            ${attributesHtml}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <h5><i class="bi bi-graph-up"></i> Предложения в магазинах</h5>
+                                        <div class="table-responsive mt-3">
+                                            <table class="table table-hover">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Магазин</th>
+                                                        <th>Цена</th>
+                                                        <th>Наличие</th>
+                                                        <th>Действия</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    ${offersHtml}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <p class="text-muted small mt-2">
+                                            <i class="bi bi-info-circle"></i> Данные обновлены: ${data.offers[0]?.date_parsed || 'Неизвестно'}
+                                        </p>
+                                    </div>
+                                </div>
+                            `;
+
+                        const modal = new bootstrap.Modal(document.getElementById('productModal'));
+                        modal.show();
+                    } else {
+                        showError('Не удалось загрузить информацию о товаре: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    showError('Ошибка при загрузке информации о товаре');
+                });
+        }
+
+        // Применить фильтры
+        function applyFilters() {
+            searchProducts(1);
+        }
+
+        // Сброс фильтров
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('brandFilter').value = '';
+            document.getElementById('websiteFilter').value = '';
+            document.getElementById('priceMin').value = '';
+            document.getElementById('priceMax').value = '';
+            document.getElementById('sortBy').value = 'new';
+            searchProducts(1);
+        }
+
+        // Показать ошибку
+        function showError(message) {
+            const container = document.getElementById('results');
+            container.innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle"></i> ${message}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    </div>
+                `;
+        }
+
+        // Поиск по Enter
+        document.getElementById('searchInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') searchProducts(1);
+        });
+
+        // Автоматический поиск при изменении цены (с задержкой)
+        let priceTimeout;
+        document.getElementById('priceMin').addEventListener('input', function () {
+            clearTimeout(priceTimeout);
+            priceTimeout = setTimeout(() => searchProducts(1), 800);
+        });
+        document.getElementById('priceMax').addEventListener('input', function () {
+            clearTimeout(priceTimeout);
+            priceTimeout = setTimeout(() => searchProducts(1), 800);
+        });
+    </script>
+</body>
+</html>

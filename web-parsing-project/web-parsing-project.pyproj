@@ -1,0 +1,79 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>acde9a2f-7b74-4283-90d3-6d56fc9bdaae</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>web_parsing_project.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>web-parsing-project</Name>
+    <RootNamespace>web-parsing-project</RootNamespace>
+    <InterpreterId>MSBuild|venv|$(MSBuildProjectFullPath)</InterpreterId>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="app.py" />
+    <Compile Include="database\init_db.py" />
+    <Compile Include="database\__init__.py" />
+    <Compile Include="filters.py" />
+    <Compile Include="parsers\citilink_selenium.py" />
+    <Compile Include="parsers\dns_selenium.py" />
+    <Compile Include="parsers\ekatalog_requests.py" />
+    <Compile Include="parsers\unified_parser.py" />
+    <Compile Include="webapp\app.py" />
+    <Compile Include="web_parsing_project.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include="venv\">
+      <Id>venv</Id>
+      <Version>3.11</Version>
+      <Description>venv (Python 3.11 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="database\" />
+    <Folder Include="data\" />
+    <Folder Include="templates\" />
+    <Folder Include="raw_data\" />
+    <Folder Include="webapp\" />
+    <Folder Include="parsers\" />
+    <Folder Include="webapp\templates\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="docker-compose.yml" />
+    <Content Include="raw_data\citilink_products.json" />
+    <Content Include="raw_data\dns_products.json" />
+    <Content Include="raw_data\mvideo_products.json" />
+    <Content Include="requirements.txt" />
+    <Content Include="templates\about.html" />
+    <Content Include="templates\base.html" />
+    <Content Include="templates\index.html" />
+    <Content Include="templates\product.html" />
+    <Content Include="templates\search.html" />
+    <Content Include="templates\stats.html" />
+    <Content Include="webapp\templates\index.html" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+  <!-- Uncomment the CoreCompile target to enable the Build command in
+       Visual Studio and specify your pre- and post-build commands in
+       the BeforeBuild and AfterBuild targets below. -->
+  <!--<Target Name="CoreCompile" />-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+</Project>
